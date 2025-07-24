@@ -1,0 +1,273 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --background: oklch(98.5% 0.012 280);
+  --foreground: oklch(37.784% 0.04183 190.932);
+  --surface: oklch(96% 0.015 275);
+
+  --primary: oklch(80% 0.16 180);
+  --primary-foreground: oklch(35.982% 0.06531 178.018);
+  --primary-dark: oklch(47.276% 0.08601 179.644);
+  --primary-dark-foreground: oklch(89.707% 0.04817 186.707);
+
+  --secondary: oklch(82% 0.14 320);
+  --secondary-foreground: oklch(26.959% 0.1227 317.455);
+  --secondary-dark: oklch(30.908% 0.14989 318.054);
+  --secondary-dark-foreground: oklch(87.861% 0.06528 318.696);
+
+  --success: oklch(75% 0.18 140);
+  --success-foreground: oklch(98% 0.003 140);
+
+  --warning: oklch(82% 0.16 70);
+  --warning-foreground: oklch(25% 0.03 70);
+
+  --error: oklch(68% 0.20 25);
+  --error-foreground: oklch(98% 0.005 25);
+
+  --info: oklch(76% 0.14 220);
+  --info-foreground: oklch(98% 0.003 220);
+
+  --chat-bubble: oklch(90.733% 0.05149 190.345);
+  --chat-own: oklch(85.941% 0.13256 176.368);
+  --room-active: oklch(88% 0.1 200);
+  --room-inactive: oklch(92% 0.04 270);
+
+  --border-color: oklch(91.068% 0.00697 175.207);
+  --border-hover: oklch(87.726% 0.1594 173.255);
+  --border-focus: oklch(80% 0.38 180);
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  --shadow-sm: 0 1px 3px oklch(0% 0 0 / 0.1);
+  --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.08);
+  --shadow-lg: 0 8px 25px oklch(0% 0 0 / 0.12);
+  --shadow-color: oklch(76% 0.12 260);
+
+  --input-bg: oklch(96% 0.008 275);
+  --input-border: oklch(82% 0.04 270);
+  --input-focus-border: oklch(80% 0.38 180);
+  --input-placeholder: oklch(55% 0.02 270);
+
+  --transition-fast: 0.15s ease-out;
+  --transition-medium: 0.25s ease-out;
+  --transition-slow: 0.4s ease-out;
+}
+
+.dark {
+  --background: oklch(12% 0.015 260);
+  --foreground: oklch(94% 0.008 270);
+  --surface: oklch(16% 0.02 265);
+
+  --primary: oklch(72% 0.14 260);
+  --primary-foreground: oklch(12% 0.01 260);
+
+  --secondary: oklch(76% 0.13 320);
+  --secondary-foreground: oklch(12% 0.015 320);
+
+  --accent: oklch(74% 0.15 160);
+  --accent-foreground: oklch(12% 0.01 160);
+
+  --success: oklch(70% 0.16 140);
+  --success-foreground: oklch(12% 0.005 140);
+
+  --warning: oklch(78% 0.15 70);
+  --warning-foreground: oklch(12% 0.01 70);
+
+  --error: oklch(64% 0.18 25);
+  --error-foreground: oklch(12% 0.005 25);
+
+  --info: oklch(72% 0.13 220);
+  --info-foreground: oklch(12% 0.005 220);
+
+  --chat-bubble: oklch(20% 0.02 280);
+  --chat-own: oklch(28% 0.08 260);
+  --room-active: oklch(26% 0.06 200);
+  --room-inactive: oklch(18% 0.02 270);
+
+  --border-color: oklch(28% 0.02 270);
+  --border-hover: oklch(72% 0.08 260);
+  --border-focus: oklch(57.227% 0.00663 264.585);
+
+  --shadow-sm: 0 1px 3px oklch(0% 0 0 / 0.3);
+  --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.25);
+  --shadow-lg: 0 8px 25px oklch(0% 0 0 / 0.35);
+
+  --input-bg: oklch(18% 0.012 275);
+  --input-border: oklch(32% 0.04 270);
+  --input-focus-border: oklch(72% 0.12 260);
+  --input-placeholder: oklch(45% 0.02 270);
+}
+
+
+/* === Tailwind Tema Entegrasyonu === */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-dark-foreground: var(--primary-dark-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-secondary-dark-foreground: var(--secondary-dark-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-chat-bubble: var(--chat-bubble);
+  --color-chat-own: var(--chat-own);
+  --color-room-active: var(--room-active);
+  --color-room-inactive: var(--room-inactive);
+
+  --color-border: var(--border-color);
+  --color-border-hover: var(--border-hover);
+  --color-border-focus: var(--border-focus);
+
+  --color-input-bg: var(--input-bg);
+  --color-input-border: var(--input-border);
+  --color-input-focus-border: var(--input-focus-border);
+  --color-input-placeholder: var(--input-placeholder);
+
+
+  --font-sans: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --font-display: 'Poppins', 'Inter', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-medium), color var(--transition-medium);
+}
+
+/* Chat */
+.chat-message {
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  max-width: 75%;
+}
+
+.chat-message-other {
+  background: var(--chat-bubble);
+  align-self: flex-start;
+}
+
+.chat-message-own {
+  background: var(--chat-own);
+  color: var(--primary-foreground);
+  align-self: flex-end;
+}
+
+/* Rooms */
+.room-item {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 0.5rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.room-item-inactive {
+  background: var(--room-inactive);
+  border: var(--border-width) solid var(--border-color);
+}
+
+.room-item-active {
+  background: var(--room-active);
+  border: var(--border-width) solid var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary);
+}
+
+/* Pomodoro Timer */
+.timer-work {
+  color: var(--pomodoro-work);
+  background: oklch(from var(--pomodoro-work) l c h / 0.1);
+}
+
+.timer-break {
+  color: var(--pomodoro-break);
+  background: oklch(from var(--pomodoro-break) l c h / 0.1);
+}
+
+.timer-long-break {
+  color: var(--pomodoro-long-break);
+  background: oklch(from var(--pomodoro-long-break) l c h / 0.1);
+}
+
+/* extras */
+.shadow-soft {
+  box-shadow: var(--shadow-md);
+}
+
+.border-gradient {
+  position: relative;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.glass-effect {
+  backdrop-filter: blur(10px);
+  background: oklch(from var(--surface) l c h / 0.8);
+  border: var(--border-width) solid oklch(from var(--border-color) l c h / 0.5);
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  :root {
+    --radius-lg: var(--radius-md);
+    --radius-xl: var(--radius-lg);
+  }
+}
+
+/* theme animation */
+* {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: var(--transition-medium);
+  transition-timing-function: ease-out;
+}

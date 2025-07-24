@@ -14,20 +14,87 @@ const io = new Server(server, {
   }
 })
 
-io.on("connection", (socket) => {
-  if (process.env.NODE_ENV === "development") {
-    console.log("Client connected:", socket.id)
-  }
+const onlineUsersPerRoom: Record<string, Set<string>> = {}
 
-  socket.on("join-room", ({ roomId, user }) => {
+io.on("connection", (socket) => {
+
+  socket.onAny((event, ...args) => {
+    console.log(`[${socket.id}] event: ${event}`, args)
+  })
+
+  socket.on("join-room", async ({ roomId, user }) => {
+    const previousRoomId = socket.data.roomId
+
+    if (previousRoomId && previousRoomId !== roomId) {
+      socket.leave(previousRoomId)
+      onlineUsersPerRoom[roomId]?.delete(user)
+      io.to(previousRoomId).emit("user-left", user)
+      io.to(previousRoomId).emit("online-users", Array.from(onlineUsersPerRoom[previousRoomId] ?? []))
+
+      const leftAt = new Date()
+      io.to(previousRoomId).emit("chat-message", {
+        roomId,
+        user: "system",
+        text: `${user} joined the room`,
+        leftAt,
+        system: true
+      })
+      await logMessage({
+        roomId,
+        user: "system",
+        text: `${user} left the room`,
+        createdAt: leftAt,
+        system: true
+      })
+    }
+
     socket.data.username = user
     socket.data.roomId = roomId
+
     socket.join(roomId)
-    if (process.env.NODE_ENV === "development") {
-      console.log(`${socket.id} joined room: ${roomId}`)
+
+    if (!onlineUsersPerRoom[roomId]) {
+      onlineUsersPerRoom[roomId] = new Set()
     }
-    logMessage({ roomId, user: " ", text: `${user} joined the room`, system: true })
-    io.to(roomId).emit("user-joined", user)
+    onlineUsersPerRoom[roomId].add(user)
+
+    io.to(roomId).emit("online-users", Array.from(onlineUsersPerRoom[roomId]))
+    const joinedAt = new Date()
+    io.to(roomId).emit("chat-message", {
+      roomId,
+      user: "system",
+      text: `${user} joined the room`,
+      joinedAt,
+      system: true
+    })
+    await logMessage({
+      roomId,
+      user: "system",
+      text: `${user} joined the room`,
+      createdAt: joinedAt,
+      system: true
+    })
+  })
+
+  socket.on("user-left", async ({ user, roomId }) => {
+    socket.leave(roomId)
+    onlineUsersPerRoom[roomId]?.delete(user)
+    io.to(roomId).emit("online-users", Array.from(onlineUsersPerRoom[roomId] ?? []))
+    const leftAt = new Date()
+    io.to(roomId).emit("chat-message", {
+      roomId,
+      user: "system",
+      text: `${user} left the room`,
+      leftAt,
+      system: true
+    })
+    await logMessage({
+      roomId,
+      user: "system",
+      text: `${user} left the room`,
+      createdAt: leftAt,
+      system: true
+    })
   })
 
   socket.on("chat-message", async ({ roomId, user, text }) => {
@@ -48,13 +115,13 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     const user = socket.data.username
     const roomId = socket.data.roomId
+
     if (user && roomId) {
-      socket.to(roomId).emit("user-left", user)
-      socket.to(roomId).emit("stop-typing", { roomId, user })
-      logMessage({ roomId, user: " ", text: `${user} left the room`, system: true })
-      if (process.env.NODE_ENV === "development") {
-        console.log(`👋 ${user} left room: ${roomId}`)
-      }
+      socket.leave(roomId)
+      io.to(roomId).emit("user-left", user)
+      io.to(roomId).emit("stop-typing", { roomId, user })
+      io.to(roomId).emit("online-users", Array.from(onlineUsersPerRoom[roomId] ?? []))
+      logMessage({ roomId, user: "system", text: `${user} left the room`, system: true })
     }
   })
 })
