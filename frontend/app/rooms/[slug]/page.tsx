@@ -4,14 +4,15 @@ import { use, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { fetchRoom } from "@/lib/api/fetchRoom"
 import ChatBox from "@/components/chat/chatBox"
-import ChatHeader from "@/components/chat/chatHeader"
 import PomodoroTimer from "@/components/pomodoro/pomodoroTimer"
 import { useStore } from "@/lib/zustand/store"
 import { connectSocket } from "@/lib/socket"
-import ActiveUserCard from "@/components/users/activeUserCard"
+import ActiveUserCard from "@/components/chat/activeUserCard"
 import { useSocketStore } from "@/lib/zustand/socketStore"
+import ChatSettings from "@/components/chat/chatSettings"
+import PersonalPreferences from "@/components/users/personalPreferences"
 
-
+const socket = connectSocket()
 
 export default function RoomPage({ params }: { params: Promise<{ slug: string }> }) {
   const user = useStore((s) => s.username)
@@ -40,18 +41,18 @@ export default function RoomPage({ params }: { params: Promise<{ slug: string }>
     getRoom()
   }, [slug])
 
-
+  socket.on("online-users", (users: string[]) => {
+    setOnlineUsers(users)
+  })
   if (!room) return
   return (
-    <div className="relative flex flex-col h-screen overflow-hidden">
-      <ChatHeader roomName={room.name} goBack={() => router.push("/rooms")} onlineUsers={onlineUsers.length} isConnected={isConnected} />
-
-      <div className="p-3 h-[93vh] grid grid-cols-4 grid-rows-3 gap-1">
+    <div className="relative flex flex-col h-full overflow-hidden"> 
+      <div className="p-3 h-[90vh] grid grid-cols-4 grid-rows-3 gap-3">
         <div className="col-start-1 col-span-1 row-span-2">
-          <ActiveUserCard activeUsers={onlineUsers} />
+          <ActiveUserCard activeUsers={onlineUsers} roomName={room.name} />
         </div>
-        <div className="col-start-1 row-start-3 col-span-1 row-span-1 border border-violet-300">
-          chat settings
+        <div className="col-start-1 row-start-3 col-span-1 row-span-1">
+          <ChatSettings />
         </div>
         <div className="col-start-2 row-start-1 col-span-2 row-span-1 ">
           <PomodoroTimer setIsBreak={setIsBreak} isBreak={isBreak} />
@@ -60,8 +61,8 @@ export default function RoomPage({ params }: { params: Promise<{ slug: string }>
         <div className="col-start-2 row-start-2 col-span-2 row-span-2 ">
           <ChatBox roomId={roomId} enable={enableChat} isConnected={isConnected} />
         </div>
-        <div className="col-span-1 row-span-3 border border-green-300">
-          personal things
+        <div className="col-span-1 row-span-3 ">
+          <PersonalPreferences />
         </div>
 
 

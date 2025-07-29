@@ -1,15 +1,42 @@
+"use client"
 
-import { User2Icon } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import React from 'react'
+import { Button } from '../ui/button'
+import { usePathname, useRouter } from "next/navigation"
+import ProfilePhoto from '../ui/profilePhoto'
+import Link from 'next/link'
+import { NavLinkWithDropdown } from './navLinkDropDown'
+import { useProfileStore } from '@/lib/zustand/useProfileStore'
 
 const Navbar = () => {
-    return (
-        <div className='w-full h-14 bg-primary text-primary-foreground items-center justify-between flex py-2 px-8'>
-            <h1 className='text-primary-foreground font-bold text-xl'>ROOMPULSE</h1>
-            <div className='bg-accent text-accent-foreground rounded-full p-2'>
-                <User2Icon className="w-5 h-5 m-auto" />
-            </div>
+    const {
+        avatar, username
+    } = useProfileStore()
 
+    const pathname = usePathname()
+    const router = useRouter()
+    const showBackButton =
+        pathname?.includes(`/account`) ||
+        pathname?.includes("/rooms/")
+
+    return (
+        <div className='relative w-full h-[7vh] bg-primary text-primary-foreground items-center justify-between flex py-2 px-8 z-30'>
+            <Link href="/" className='text-primary-foreground font-bold text-xl'>DevHive</Link>
+            {username &&
+                <NavLinkWithDropdown username={username}>
+                    <ProfilePhoto imageUrl={avatar || ""} />
+                </NavLinkWithDropdown>
+            }
+            {showBackButton && (
+                <Button
+                    onClick={() => router.back()}
+                    className='z-10 absolute left-4 -bottom-11 -translate-y-1/2'
+                    color="primarydark"
+                >
+                    <ChevronLeft className='w-5 h-5' />
+                </Button>
+            )}
 
         </div>
     )

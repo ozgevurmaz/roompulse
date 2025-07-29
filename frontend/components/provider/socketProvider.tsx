@@ -3,7 +3,7 @@
 import { ReactNode } from 'react'
 import { useSocketRoomCleanup } from '@/hooks/useSocketRoomCleanup'
 
-export function Providers({ children }: { children: ReactNode }) {
+export function SocketProvider({ children }: { children: ReactNode }) {
     useSocketRoomCleanup()
     return children
 }

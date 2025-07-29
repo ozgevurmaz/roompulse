@@ -7,11 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatTypingUsers(users: string[]): string {
     if (users.length === 0) return ""
-    if (users.length === 1) return `${users[0]} is typing...`
-    if (users.length === 2) return `${users[0]} and ${users[1]} are typing...`
+    if (users.length === 1) return `${users[0]} is typing`
+    if (users.length === 2) return `${users[0]} and ${users[1]} are typing`
 
     const last = users.pop()
-    return `${users.join(", ")}, and ${last} are typing...`
+    return `${users.join(", ")}, and ${last} are typing`
 }
 
 export const formatTime = (date: Date | string) => {

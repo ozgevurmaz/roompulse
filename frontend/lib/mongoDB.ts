@@ -6,6 +6,9 @@ import './models/room'
 const uri = process.env.MONGODB_URI!
 const dbName = process.env.DB_NAME!
 
+if (!uri) {
+  throw new Error("Please define the MONGODB_URI environment variable")
+}
 
 export const connectToDatabase = async (): Promise<void> => {
   mongoose.set("strictQuery", true);

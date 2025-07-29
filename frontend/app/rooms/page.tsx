@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Brain, MessageCircleMore, Users } from "lucide-react"
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
-import Navbar from "@/components/Navbar/navbar"
+import { ArrowRight, MessageCircleMore, Users } from "lucide-react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
 import { useSocketStore } from "@/lib/zustand/socketStore"
+import { useSession } from "next-auth/react"
 
 type Room = {
   _id: string
@@ -18,18 +18,34 @@ type Room = {
 export default function RoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([])
   const [newRoomName, setNewRoomName] = useState("")
+  const [loading, setLoading] = useState<boolean>(true)
   const router = useRouter()
+
   const { setJoinedRoomId } = useSocketStore()
+
+  const { data: session, status } = useSession()
+
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/")
+    }
+  }, [status])
 
   useEffect(() => {
     setJoinedRoomId(null)
+    setLoading(true)
     async function fetchRooms() {
       const res = await fetch("/api/rooms")
       const data = await res.json()
       setRooms(data)
     }
     fetchRooms()
+    setLoading(false)
   }, [])
+
+
+  if (status === "loading") return <p>Loading...</p>
 
   async function handleCreateRoom() {
     const res = await fetch("/api/rooms", {
@@ -46,14 +62,17 @@ export default function RoomsPage() {
 
   return (
     <>
-      <Navbar />
+
       <div className="p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold mb-4">
             Rooms
           </h1>
 
-          <Button className="px-2 font-semibold" color="secondary">Create a New Room</Button>
+          <Button
+            className="px-2 font-semibold"
+            color="secondary"
+          >Create a New Room</Button>
         </div>
 
 

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AppProviders from "@/components/provider/mainAppProviders";
+import Navbar from "@/components/Navbar/navbar";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +28,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden bg-background`}
       >
-        {children}
+        <AppProviders>
+          <Navbar />
+          <ToastContainer position="top-right" />
+          <div className="p-3 max-h-[93vh] flex h-full w-full">
+          {children}
+          </div>
+        </AppProviders>
       </body>
     </html>
   );

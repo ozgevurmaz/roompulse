@@ -17,17 +17,12 @@ const io = new Server(server, {
 const onlineUsersPerRoom: Record<string, Set<string>> = {}
 
 io.on("connection", (socket) => {
-
-  socket.onAny((event, ...args) => {
-    console.log(`[${socket.id}] event: ${event}`, args)
-  })
-
   socket.on("join-room", async ({ roomId, user }) => {
     const previousRoomId = socket.data.roomId
 
     if (previousRoomId && previousRoomId !== roomId) {
       socket.leave(previousRoomId)
-      onlineUsersPerRoom[roomId]?.delete(user)
+      onlineUsersPerRoom[previousRoomId]?.delete(user)
       io.to(previousRoomId).emit("user-left", user)
       io.to(previousRoomId).emit("online-users", Array.from(onlineUsersPerRoom[previousRoomId] ?? []))
 

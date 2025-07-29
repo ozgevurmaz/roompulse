@@ -1,4 +1,4 @@
-import { Providers } from "@/components/provider/provider";
+import { SocketProvider } from "@/components/provider/socketProvider";
 
 export default function RoomLayout({
     children,
@@ -6,8 +6,10 @@ export default function RoomLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <Providers>
-            {children}
-        </Providers>
+        <SocketProvider>
+            <div className="w-full">
+                {children}
+            </div>
+        </SocketProvider>
     );
 }

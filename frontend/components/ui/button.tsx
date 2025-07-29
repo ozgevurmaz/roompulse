@@ -13,9 +13,8 @@ export const Button = ({ color = "primary", className, children, disabled, ...pr
     const colorVariants = {
         primary: "bg-primary hover:bg-primary-hover text-primary-foreground shadow-sm hover:shadow-md disabled:hover:shadow-none",
         secondary: "bg-secondary hover:bg-secondary-hover text-secondary-foreground shadow-sm hover:shadow-md disabled:hover:shadow-none",
-        primarydark: "bg-primary-dark hover:bg-primary-dark-hover text-primary-dark-foreground shadow-sm hover:shadow-md disabled:hover:shadow-none",
-        secondarydark: "bg-secondary-dark hover:bg-secondary-dark-hover text-secondary-dark-foreground shadow-sm hover:shadow-md disabled:hover:shadow-none",
-
+        primarydark: "bg-primary-dark hover:bg-primary-dark/90 text-primary-dark-foreground shadow-sm hover:shadow-md disabled:hover:shadow-none",
+        secondarydark: "bg-secondary-dark hover:bg-secondary-dark/90 text-secondary-dark-foreground shadow-sm hover:shadow-md disabled:hover:shadow-none",
         none: ""
     }
 

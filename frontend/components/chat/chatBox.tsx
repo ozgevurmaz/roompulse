@@ -121,10 +121,10 @@ const ChatBox = (
     }
 
     return (
-        <Card className="relative w-full h-full pt-0.5 bg-surface flex flex-col justify-between overflow-hidden rounded-xl shadow-md px-2 py-1">
+        <Card className="relative w-full h-full pt-0.5 bg-surface flex flex-col justify-between gap-0 overflow-hidden rounded-xl shadow-md px-2 py-1">
 
             <div
-                className="flex-1 overflow-y-auto p-2 pb-0 rounded-xl scrollbar-thin scrollbar-thumb-border-hover scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/30 transition-all duration-300"
+                className="relative flex-1 overflow-y-auto p-2 pb-1 rounded-xl scrollbar-thin scrollbar-thumb-border-hover scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/30 transition-all duration-300"
                 style={{ scrollBehavior: "smooth" }}
             >
                 {chat.length === 0 ? (
@@ -137,25 +137,21 @@ const ChatBox = (
                         <MessageItem key={i} message={m} index={i} username={username} />
                     ))
                 )}
-
-                {/* Typing indicator */}
-                {typingUsers.size > 0 && (
-                    <div className="absolude b-2">
-                        <div className="bg-neutral/30 text-neutral-foreground px-4 py-2 rounded-2xl rounded-bl-md text-xs flex items-center gap-2 animate-pulse">
-                            <div className="flex gap-1">
-                                <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce"></div>
-                            </div>
-                            <span>{formatTypingUsers([...typingUsers])}</span>
-                        </div>
-                    </div>
-                )}
-
                 <div ref={chatEndRef} />
             </div>
 
-            <div className="w-full bg-surface pb-2 z-10 flex gap-3 items-end px-4">
+            <div className="relative w-full bg-surface pb-2 pt-5 z-10 flex gap-3 items-end px-4">
+                {/* Typing indicator */}
+                {typingUsers.size > 0 && (
+                    <div className="absolute top-0 flex flex-row-reverse items-center gap-0.5 animate-pulse">
+                        <div className="flex gap-0.5 pt-1.5">
+                            <div className="w-0.5 h-0.5 bg-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                            <div className="w-0.5 h-0.5 bg-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                            <div className="w-0.5 h-0.5 bg-foreground rounded-full animate-bounce"></div>
+                        </div>
+                        <small>{formatTypingUsers([...typingUsers])}</small>
+                    </div>
+                )}
                 <div className="flex-1">
                     <Input
                         ref={messageInputRef}
