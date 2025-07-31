@@ -2,17 +2,20 @@
 
 import { SessionProvider } from 'next-auth/react'
 import React from 'react'
+import { SocketProvider } from './socketProvider'
 
 type Props = {
   children: React.ReactNode
 }
 
 const AppProviders = (props: Props) => {
-    return (
-        <SessionProvider>
-          {props.children}
-        </SessionProvider>
-    )
+  return (
+    <SocketProvider>
+      <SessionProvider>
+        {props.children}
+      </SessionProvider>
+    </SocketProvider>
+  )
 }
 
 export default AppProviders

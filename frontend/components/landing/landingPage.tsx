@@ -1,9 +1,13 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect } from 'react'
 import LoginButton from './loginButton'
+import { useSocketStore } from '@/lib/zustand/socketStore'
 
 type Props = {}
 
 const LandingPage = (props: Props) => {
+    useEffect(() => useSocketStore.getState().setJoinedRoomId(""), [])
     return (
         <div className="flex flex-col items-center justify-center h-screen mx-auto">
             <h1 className="text-4xl font-bold">RoomPulse</h1>

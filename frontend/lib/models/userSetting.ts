@@ -9,7 +9,7 @@ export interface IUserSettings extends Document {
   updatedAt: Date
 }
 
-const UserSettingsSchema = new Schema<IUserSettings>(
+export const UserSettingsSchema = new Schema<IUserSettings>(
   {
     userId: { type: String, required: true, unique: true },
     theme: { type: String, enum: ["light", "dark"], default: "light" },

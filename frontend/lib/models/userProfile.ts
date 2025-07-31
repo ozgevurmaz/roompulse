@@ -8,6 +8,7 @@ const userProfileSchema = new mongoose.Schema({
     },
     github: String,
     name: String,
+    title: String,
     username: {
         type: String,
         required: true
@@ -26,7 +27,7 @@ const userProfileSchema = new mongoose.Schema({
         default: false
     }
 }, {
-    timestamps: true 
+    timestamps: true
 })
 
 export default mongoose.models.UserProfile || mongoose.model('UserProfile', userProfileSchema)

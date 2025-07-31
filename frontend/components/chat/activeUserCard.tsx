@@ -1,11 +1,14 @@
 import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/Card'
 import { MessageCircle, User, User2 } from 'lucide-react'
+import ProfilePhoto from '../ui/profilePhoto'
 
 type Props = {
-    activeUsers: string[]
+    activeUsers: ProfileSocketType[]
     roomName?: string
     roomId?: string
+    isConnected: boolean
+    currentUser: string
 }
 
 const ActiveUserCard = (props: Props) => {
@@ -15,6 +18,7 @@ const ActiveUserCard = (props: Props) => {
                 <CardTitle className="flex items-center gap-2 text-xl   ">
                     <MessageCircle className="w-5 h-5" />
                     {props.roomName || "Room"}
+                    <div className={`w-2 h-2 rounded-full ${props.isConnected ? "bg-success" : "bg-error"}`} />
                 </CardTitle>
                 <CardDescription className='text-sm text-primary-foreground'>
                     <span className='text-secondary'>Active Users:  </span>
@@ -27,21 +31,21 @@ const ActiveUserCard = (props: Props) => {
                     <div className='grid gap-2 w-full'>
                         {
                             props.activeUsers.map((u, index) =>
+
                                 <div
                                     key={index}
-                                    className={`flex px-2 w-full gap-2 items-center ${index / 2 === 0 ? "bg-primary/10 text-primary-dark" : "bg-secondary/10 text-secondary-dark"}`}
+                                    className={`flex px-2 py-1 w-full gap-2 items-center ${index / 2 === 0 ? "bg-primary/10 text-primary-dark" : "bg-secondary/10 text-secondary-dark"}`}
                                 >
                                     {/* Profile Photo */}
-                                    <div className={`${index / 2 === 0 ? "bg-primary-dark-foreground text-primary-dark" : "bg-secondary-dark-foreground text-secondary-dark"} p-2 rounded-full`}>
-                                        <User2 className='w-5 h-5' />
-                                    </div>
+                                    <ProfilePhoto imageUrl={u.avatar} size="md" />
 
                                     <div className='flex flex-col items-start'>
-                                        <p>{u}</p>
-                                        <p>Fullstack Developer</p>
+                                        <p className='font-semibold'>{u.username}</p>
+                                        <small>{u.title} {u.company && <>| {u.company}</>}</small>
                                     </div>
-                                </div>
-                            )
+                                </div>)
+
+
                         }
                     </div>
 

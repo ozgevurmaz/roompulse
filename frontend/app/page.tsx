@@ -10,7 +10,7 @@ export default async function HomePage() {
   return (
     <>
       {session?.user ? (
-        <LoggedInLanding />
+        <LoggedInLanding/>
       ) : (
         <LandingPage />
       )}

@@ -2,13 +2,13 @@
 
 import { connectSocket } from '@/lib/socket'
 import { formatTypingUsers } from '@/lib/utils'
-import { useStore } from '@/lib/zustand/store'
 import { MessageCircle, Send } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import MessageItem from './messageItem'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Card } from '../ui/Card'
+import { useProfileStore } from '@/lib/zustand/useProfileStore'
 
 const socket = connectSocket()
 
@@ -24,11 +24,13 @@ const ChatBox = (
             enable: boolean,
             isConnected: boolean
         }) => {
-    const username = useStore((s) => s.username)
+    const { id, username, title, company, avatar } = useProfileStore()
+
+    const user: ProfileSocketType = { id, username, title, company, avatar }
     const [message, setMessage] = useState<string>("")
     const [chat, setChat] = useState<MessageType[]>([])
-    const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set())
-    const [onlineUsers, setOnlineUsers] = useState<string[]>([])
+    const [typingUsers, setTypingUsers] = useState<Map<string, ProfileSocketType>>(new Map())
+
 
     const chatEndRef = useRef<HTMLDivElement>(null)
     const typingTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -50,24 +52,28 @@ const ChatBox = (
         , [roomId])
 
     useEffect(() => {
-        if (!username || !roomId || !enable) return
+        if (!user || !roomId || !enable) return
 
         const messageListener = ({ user, text, roomId: incomingRoomId, createdAt, system }: MessageSocketType) => {
             if (roomId !== incomingRoomId) return
             setChat((prev) => [...prev, { user, text, createdAt, system: !!system }])
         }
 
-        const typingListener = ({ user, roomId: incomingRoomId }: { user: string; roomId: string }) => {
-            if (roomId === incomingRoomId && user !== username) {
-                setTypingUsers(prev => new Set(prev).add(user))
+        const typingListener = ({ user, roomId: incomingRoomId }: { user: ProfileSocketType; roomId: string }) => {
+            if (roomId === incomingRoomId && user.username !== username) {
+                setTypingUsers(prev => {
+                    const updated = new Map(prev)
+                    updated.set(user.username, user)
+                    return updated
+                })
             }
         }
 
-        const stopTypingListener = ({ roomId: incomingRoomId, user }: { roomId: string, user: string }) => {
-            if (roomId === incomingRoomId && user !== username) {
+        const stopTypingListener = ({ roomId: incomingRoomId, user }: { roomId: string, user: ProfileSocketType }) => {
+            if (roomId === incomingRoomId && user.username !== username) {
                 setTypingUsers(prev => {
-                    const updated = new Set(prev)
-                    updated.delete(user)
+                    const updated = new Map(prev)
+                    updated.delete(user.username)
                     return updated
                 })
             }
@@ -82,7 +88,7 @@ const ChatBox = (
             socket.off("typing", typingListener)
             socket.off("stop-typing", stopTypingListener)
         }
-    }, [roomId, username])
+    }, [roomId, user])
 
 
     useEffect(() => {
@@ -93,7 +99,7 @@ const ChatBox = (
         if (message.trim()) {
             socket.emit("chat-message", {
                 roomId: roomId,
-                user: username,
+                user: user,
                 text: message,
             })
             setMessage("")
@@ -108,14 +114,14 @@ const ChatBox = (
     }
 
     const handleTyping = () => {
-        socket.emit("typing", { roomId: roomId, user: username })
+        socket.emit("typing", { roomId: roomId, user: user })
 
         if (typingTimeout.current) {
             clearTimeout(typingTimeout.current)
         }
 
         typingTimeout.current = setTimeout(() => {
-            socket.emit("stop-typing", { roomId: roomId, user: username })
+            socket.emit("stop-typing", { roomId: roomId, user: user })
             typingTimeout.current = null
         }, 1000)
     }
@@ -134,7 +140,7 @@ const ChatBox = (
                     </div>
                 ) : (
                     chat.map((m, i) => (
-                        <MessageItem key={i} message={m} index={i} username={username} />
+                        <MessageItem key={i} message={m} index={i} user={user.id} />
                     ))
                 )}
                 <div ref={chatEndRef} />
@@ -149,7 +155,9 @@ const ChatBox = (
                             <div className="w-0.5 h-0.5 bg-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                             <div className="w-0.5 h-0.5 bg-foreground rounded-full animate-bounce"></div>
                         </div>
-                        <small>{formatTypingUsers([...typingUsers])}</small>
+                        <small>
+                            {formatTypingUsers(Array.from(typingUsers.values()))}
+                        </small>
                     </div>
                 )}
                 <div className="flex-1">

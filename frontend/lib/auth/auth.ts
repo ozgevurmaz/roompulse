@@ -28,7 +28,7 @@ export const authOptions = [
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: authOptions,
     callbacks: {
-        async jwt({ token, profile, trigger }) {
+        async jwt({ token, profile }) {
             if (profile) {
                 const githubProfile = profile as unknown as GitHubProfile
                 token.username = githubProfile.login
@@ -51,23 +51,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
         async signIn({ user, profile }) {
             try {
-                const db = await connectToDatabase()
+                await connectToDatabase()
 
-                const existing = await UserProfile.findOne({ userId: user.id })
+                const existing = await UserProfile.findOne({ username: user.username })
+                console.log("profile", profile)
+                console.log("user", user)
 
                 if (!existing) {
                     // Create new user profile
                     await UserProfile.create({
-                        userId: user.id,
+                        userId: profile?.id?.toString(),
+                        email: profile?.email,
                         github: profile?.html_url,
                         name: profile?.name ?? "",
                         username: profile?.login,
                         bio: profile?.bio ?? "",
-                        avatar: profile?.image,
+                        avatar: profile?.avatar_url,
                         location: profile?.location ?? "",
                         company: profile?.company ?? "",
                         hireable: profile?.hireable ?? false,
                         socialLinks: [],
+                        title: ""
                     })
 
                     await UserSettings.create({
@@ -98,6 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     pages: {
         signIn: '/auth/signin',
+        signOut: ''
     },
     events: {
         async signIn({ user, isNewUser }) {

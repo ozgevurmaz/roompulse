@@ -1,6 +1,8 @@
 interface userProfile {
+    id: string
     userId: string;
     username: string;
+    title?: string;
     github?: string;
     name: string;
     email: string;
@@ -14,5 +16,7 @@ interface userProfile {
     updatedAt: Date;
 }
 
-type UpdateProfileData = Omit<userProfile, 'userId' | 'avatar' | 'username' |'email' | 'createdAt' | 'updatedAt'>
+type UpdateProfileData = Omit<userProfile, 'userId' | 'avatar' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
 type ProfileDataType = Omit<userProfile, 'userId' | 'createdAt' | 'updatedAt'>
+
+type ProfileSocketType = Pick<userProfile, 'username' | 'title' | 'avatar' | 'company' | "id">

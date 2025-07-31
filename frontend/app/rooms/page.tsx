@@ -1,117 +1,85 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, MessageCircleMore, Users } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
+import Loading from "@/components/screens/Loading"
+import { useRoomsStore } from "@/lib/zustand/useRooms"
+import { CreateRoomModal } from "@/components/room/createRoomModal"
+import { useProfileStore } from "@/lib/zustand/useProfileStore"
+import { useRooms } from "@/hooks/get/useRooms"
 import { useSocketStore } from "@/lib/zustand/socketStore"
-import { useSession } from "next-auth/react"
+import { useEffect } from "react"
 
-type Room = {
-  _id: string
-  name: string
-  slug: string
-  createdAt: string
-}
 
 export default function RoomsPage() {
-  const [rooms, setRooms] = useState<Room[]>([])
-  const [newRoomName, setNewRoomName] = useState("")
-  const [loading, setLoading] = useState<boolean>(true)
   const router = useRouter()
 
-  const { setJoinedRoomId } = useSocketStore()
+  const { username } = useProfileStore()
+  const { rooms, setRooms } = useRoomsStore()
+  const { loading } = useRooms()
 
-  const { data: session, status } = useSession()
-
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/")
-    }
-  }, [status])
-
-  useEffect(() => {
-    setJoinedRoomId(null)
-    setLoading(true)
-    async function fetchRooms() {
-      const res = await fetch("/api/rooms")
-      const data = await res.json()
-      setRooms(data)
-    }
-    fetchRooms()
-    setLoading(false)
-  }, [])
-
-
-  if (status === "loading") return <p>Loading...</p>
-
-  async function handleCreateRoom() {
-    const res = await fetch("/api/rooms", {
-      method: "POST",
-      body: JSON.stringify({ name: newRoomName }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-
-    const data = await res.json()
-    router.push(`/rooms/${data.slug}`)
-  }
+  useEffect(() => useSocketStore.getState().setJoinedRoomId(""), [])
 
   return (
-    <>
-
+    
       <div className="p-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold mb-4">
-            Rooms
-          </h1>
-
-          <Button
-            className="px-2 font-semibold"
-            color="secondary"
-          >Create a New Room</Button>
+          <div className="mb-4">
+            <h1 className="text-2xl font-semibold">
+              Rooms
+            </h1>
+            <p>Find a suitable room and start working together with others</p>
+          </div>
+          <CreateRoomModal user={username} />
         </div>
 
 
         <div className="space-y-2">
-          {rooms.length > 0
-            ?
-            <div className="flex flex-wrap gap-3">
-              {
-                rooms.map((room, index) => (
-                  <Card
-                    key={room._id}
-                    className="group hover:border-border-hover hover:shadow-md hover:-translate-y-[2px]"
-                    onClick={() => { router.push(`/rooms/${room.slug}`) }}
-                  >
-                    <CardHeader>
-                      <CardTitle>{room.name}</CardTitle>
-                      <CardDescription>Room-{index}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex items-center mx-auto gap-3 text-xs text-foreground/60">
-                      <div className="flex gap-1">
-                        <Users className="w-4 h-4" /> 0
-                      </div>
-                      <div className="flex gap-1">
-                        <MessageCircleMore className="w-4 h-4" /> 0
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button color="primary" className="px-4">
-                        Enter Room <ArrowRight className="w-4 h-4 group-hover:translate-x-2" />
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-            </div>
-            :
-            <div>Room cannot be find</div>
+          {
+            (loading === true)
+              ?
+              <div>
+                <Loading />
+              </div>
+              :
+              rooms.length > 0
+                ?
+                <div className="flex flex-wrap gap-3">
+                  {
+                    rooms.map((room, index) => (
+                      <Card
+                        key={index}
+                        className="group hover:border-border-hover hover:shadow-md hover:-translate-y-[2px]"
+                        onClick={() => { router.push(`/rooms/${room.slug}`) }}
+                      >
+                        <CardHeader>
+                          <CardTitle>{room.name}</CardTitle>
+                          <CardDescription>Room-{index}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex items-center mx-auto gap-3 text-xs text-foreground/60">
+                          <div className="flex gap-1">
+                            <Users className="w-4 h-4" /> 0
+                          </div>
+                          <div className="flex gap-1">
+                            <MessageCircleMore className="w-4 h-4" /> 0
+                          </div>
+                        </CardContent>
+                        <CardFooter>
+                          <Button color="primary" className="px-4">
+                            Enter Room <ArrowRight className="w-4 h-4 group-hover:translate-x-2" />
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    ))}
+                </div>
+                :
+                <div>Room cannot be find</div>
           }
         </div>
+
       </div>
-    </>
+    
   )
 }

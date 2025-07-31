@@ -1,7 +1,7 @@
 type MessageDBType = {
     _id: ObjectId
     roomId: string
-    user: string
+    user: ProfileSocketType
     text: string
     createdAt: Date
     system?: boolean

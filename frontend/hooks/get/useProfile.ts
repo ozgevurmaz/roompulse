@@ -21,9 +21,11 @@ export function useUserProfile(username: string | undefined) {
                     return
                 }
                 setProfile({
+                    id:data._id,
                     username: data.username,
                     name: data.name,
                     bio: data.bio,
+                    title:data.title,
                     location: data.location,
                     company: data.company,
                     hireable: data.hireable,

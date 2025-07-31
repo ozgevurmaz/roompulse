@@ -9,8 +9,10 @@ interface userProfileActions {
 export const useProfileStore = create<ProfileDataType & userProfileActions>()(
     persist(
         (set) => ({
+            id: '',
             username: '',
             github: '',
+            title: '',
             name: '',
             email: '',
             bio: '',
@@ -22,9 +24,11 @@ export const useProfileStore = create<ProfileDataType & userProfileActions>()(
             setProfile: (data) => set((state) => ({ ...state, ...data })),
             resetProfile: () =>
                 set(() => ({
+                    id: '',
                     username: '',
                     github: '',
                     name: '',
+                    title: '',
                     email: '',
                     bio: '',
                     avatar: '',

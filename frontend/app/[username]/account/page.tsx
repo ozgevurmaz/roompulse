@@ -5,8 +5,7 @@ import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
-import { Card} from "@/components/ui/Card"
-import { Briefcase, Building2, Github, Link2, Mail, MapPin, Plus, Save, User, X } from "lucide-react"
+import { Briefcase, BriefcaseBusiness, Building2, Github, Link2, Mail, MapPin, Plus, Save, User, X } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { useUserProfile } from "@/hooks/get/useProfile"
@@ -14,6 +13,9 @@ import { useProfileStore } from "@/lib/zustand/useProfileStore"
 import { useUpdateProfile } from "@/hooks/post/useUpdatePost"
 import { Textarea } from "@/components/ui/textarea"
 import ProfileCard from "@/components/profile/profileCard"
+import LoadingScreen from "@/components/screens/Loading"
+import { toast } from "react-toastify"
+import { signOut } from "@/lib/auth/auth"
 
 export default function AccountPage() {
     const { data: session, status } = useSession()
@@ -21,7 +23,7 @@ export default function AccountPage() {
     const router = useRouter()
     const { loading, error } = useUserProfile(username as string)
     const {
-        name, bio, location, company, hireable, socialLinks, github, email, avatar: image, username: profileUsername
+        id, name, bio, location, company, hireable, socialLinks, github, email, title, avatar: image, username: profileUsername
     } = useProfileStore()
 
     const { updateProfile } = useUpdateProfile(username as string)
@@ -30,6 +32,7 @@ export default function AccountPage() {
     const [lookingFor, setLookingFor] = useState<boolean>(hireable || false)
     const [nameInput, setNameInput] = useState<string>(name || "")
     const [bioInput, setBioInput] = useState<string>(bio || "")
+    const [titleInput, setTitleInput] = useState<string>(title || "")
     const [locationInput, setLocationInput] = useState<string>(location || "")
     const [companyInput, setCompanyInput] = useState<string>(company || "")
     const [social, setSocial] = useState<string[]>([])
@@ -56,51 +59,23 @@ export default function AccountPage() {
         setCompanyInput(company || "")
         setLookingFor(hireable || false)
         setSocial(socialLinks || [])
+        setTitleInput(title || "")
     }, [name, bio, location, company, hireable, socialLinks])
 
-    if (status === "loading") {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            </div>
-        )
-    }
+    if (status === "loading") return <LoadingScreen />
 
 
     if (status !== "authenticated") {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <Card className="p-8 text-center">
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">Unauthorized</h2>
-                    <p className="text-gray-600">Please log in to access this page.</p>
-                </Card>
-            </div>
-        )
+        return
     }
 
-    if (status !== "authenticated") return <p>Unauthorized</p>
-
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-pulse space-y-4">
-                    <div className="h-20 w-20 bg-gray-200 rounded-full mx-auto"></div>
-                    <div className="h-4 bg-gray-200 rounded w-48"></div>
-                    <div className="h-4 bg-gray-200 rounded w-32"></div>
-                </div>
-            </div>
-        )
+        return <LoadingScreen />
     }
 
     if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <Card className="p-8 text-center border-red-200">
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">{error}</h2>
-                    <p className="text-gray-600">{error}</p>
-                </Card>
-            </div>
-        )
+        toast.error(error)
+        
     }
 
     const addSocialLink = () => {
@@ -121,12 +96,14 @@ export default function AccountPage() {
 
     const handleSave = async () => {
         updateProfile({
+            id,
             name: nameInput,
             bio: bioInput,
             location: locationInput,
             company: companyInput,
             hireable: lookingFor,
-            socialLinks: social
+            socialLinks: social,
+            title: titleInput
         })
     }
 
@@ -158,7 +135,7 @@ export default function AccountPage() {
     return (
         <ProfileCard headerChildren={headerChildren} image={image}>
             <>
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-4 gap-6">
                     <Input
                         label="Full Name"
                         LabelIcon={User}
@@ -178,6 +155,15 @@ export default function AccountPage() {
                     />
 
                     <Input
+                        label="Title"
+                        LabelIcon={BriefcaseBusiness}
+                        value={titleInput}
+                        onChange={(e) => setTitleInput(e.target.value)}
+                        placeholder="Developer.."
+                        className="h-12"
+                    />
+
+                    <Input
                         label="Company"
                         LabelIcon={Building2}
                         value={companyInput}
@@ -185,7 +171,7 @@ export default function AccountPage() {
                         placeholder="Your company or organization"
                         className="h-12"
                     />
-                    <div className="col-span-3 relative">
+                    <div className="col-span-4 relative">
                         <Textarea
                             label="Bio"
                             value={bioInput}

@@ -6,7 +6,7 @@ import { get } from 'http'
 
 const ProfilePhoto = ({
   imageUrl,
-  size = "sm"
+  size = "md"
 }: {
   imageUrl: string | null
   size?: "sm" | "md" | "lg" | "xl"
@@ -15,9 +15,9 @@ const ProfilePhoto = ({
   const getSizeClass = (size: string) => {
     switch (size) {
       case "sm":
-        return "w-10 h-10"
+        return "w-4 h-4"
       case "md":
-        return "w-12 h-12"
+        return "w-8 h-8"
       case "lg":
         return "w-26 h-26 ring-4 ring-background shadow-xl"
       case "xl":

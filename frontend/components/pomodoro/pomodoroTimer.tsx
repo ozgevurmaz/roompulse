@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Coffee, Brain } from 'lucide-react';
 import { Button } from '../ui/button';
-import { formatSeconds } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import ProgressBar from '../ui/progressBar';
+import { formatSeconds } from '@/lib/utils';
 
 const PomodoroTimer = (
   {

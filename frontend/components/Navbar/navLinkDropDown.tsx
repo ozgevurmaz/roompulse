@@ -7,6 +7,8 @@ import { ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Button } from '../ui/button'
+import { signOut } from 'next-auth/react'
 
 
 export const NavLinkWithDropdown = ({ children, username }: { children: React.ReactNode, username: string }) => {
@@ -17,13 +19,10 @@ export const NavLinkWithDropdown = ({ children, username }: { children: React.Re
     const [isMobileServiceOpen, setIsMobileServiceOpen] = useState<boolean>(false);
     const link = [
         { name: "Profile", href: `/${username}`, color: "none" },
-        { name: "Account", href: `${username}/account`, color: "none" },
+        { name: "Account Preferences", href: `${username}/account`, color: "none" },
         { name: "App Preferences", href: "/prefetences", color: "none" },
-        { name: "Logout", href: "/api/auth/signout", color: "error" }
     ]
     const handleLinkClick = (href: string): void => {
-        if (href === "/api/auth/signout") {
-        useProfileStore.getState().resetProfile()}
         setIsOpen(false);
         setIsMobileServiceOpen(false);
         router.push(href)
@@ -76,6 +75,14 @@ export const NavLinkWithDropdown = ({ children, username }: { children: React.Re
                                     </Link>
                                 </motion.div>
                             ))}
+                            <button
+
+                                className='text-error px-4 py-2 hover:text-error-foreground hover:bg-error w-full text-start'
+                                onClick={() => {
+                                    useProfileStore.getState().resetProfile()
+                                    signOut({callbackUrl:"/"})
+                                }}
+                            >Logout</button>
                         </div>
                     </motion.div>
                 )}

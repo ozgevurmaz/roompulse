@@ -4,32 +4,44 @@ import { useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { useSocketStore } from "@/lib/zustand/socketStore"
 import { connectSocket } from "@/lib/socket"
-import { useStore } from "@/lib/zustand/store"
+import { useProfileStore } from "@/lib/zustand/useProfileStore"
 
 const socket = connectSocket()
 
 export function useSocketRoomCleanup() {
   const pathname = usePathname()
-  const { joinedRoomId, setIsConnected } = useSocketStore()
-  const { username } = useStore()
+  const { joinedRoomId, setJoinedRoomId, setIsConnected } = useSocketStore()
+  const { id, username, title, company, avatar } = useProfileStore()
+
+  const user: ProfileSocketType = { id, username, title, company, avatar }
   const prevRoomRef = useRef<string | null>(null)
 
+  const shouldLeaveRoom = !pathname.startsWith("/rooms/") && prevRoomRef.current
+
   useEffect(() => {
-    if (!username) return
+    if (!username || !id) return
     if (prevRoomRef.current === joinedRoomId) return
 
-    if (!joinedRoomId) {
+    console.log("prev", prevRoomRef.current)
+    console.log("new", joinedRoomId)
+
+    if (shouldLeaveRoom) {
       socket.emit("user-left", {
         roomId: prevRoomRef.current,
-        user: username,
+        user,
       })
-      prevRoomRef.current = joinedRoomId
-      return
+      console.log("leaving user", user)
+      prevRoomRef.current = null
+      setIsConnected(false)
+      setJoinedRoomId("")
     }
-  
-    socket.emit("join-room", { roomId: joinedRoomId, user: username })
-    prevRoomRef.current = joinedRoomId
-    setIsConnected(true)
+
+    if (joinedRoomId) {
+      socket.emit("join-room", { roomId: joinedRoomId, user })
+      prevRoomRef.current = joinedRoomId
+      setIsConnected(true)
+      console.log("joining user", user)
+    }
     return
 
   }, [pathname, joinedRoomId])
