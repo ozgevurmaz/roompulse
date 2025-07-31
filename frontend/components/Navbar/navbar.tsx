@@ -32,7 +32,7 @@ const Navbar = () => {
                 <Button
                     onClick={() => router.back()}
                     className='z-10 absolute left-4 -bottom-11 -translate-y-1/2'
-                    color="primarydark"
+                    color="accent"
                 >
                     <ChevronLeft className='w-5 h-5' />
                 </Button>

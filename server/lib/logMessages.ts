@@ -1,4 +1,4 @@
-import Message from "./models/message"
+import Messages from "./models/message"
 import { connectToDatabase } from "./mongoDB"
 import type { MessageSocketType } from "../types/global"
 import mongoose from "mongoose"
@@ -11,9 +11,9 @@ export async function logMessage({ roomId, user, text, createdAt = new Date(), s
             throw new Error(`Invalid roomId: ${roomId}`)
         }
 
-        const newMessage = await new Message({
+        const newMessage = await new Messages({
             roomId: new mongoose.Types.ObjectId(roomId),
-            user,
+            user: new mongoose.Types.ObjectId(user),
             text,
             createdAt,
             system

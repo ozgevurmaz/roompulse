@@ -2,6 +2,8 @@
 import mongoose from "mongoose";
 import './models/message'
 import './models/room'
+import './models/userProfile'
+import './models/userSetting'
 
 const uri = process.env.MONGODB_URI!
 const dbName = process.env.DB_NAME!

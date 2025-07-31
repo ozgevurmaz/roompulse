@@ -12,6 +12,14 @@ declare global {
     createdAt?: Date
     system?: boolean
   }
+
+  type ProfileType = {
+    id: string,
+    username: string,
+    avatar: string,
+    title?: string,
+    company: string
+  }
 }
 
-export {MessageSocketType,JoinRoomPayload }
+export { MessageSocketType, JoinRoomPayload }

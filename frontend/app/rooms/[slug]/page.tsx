@@ -24,8 +24,6 @@ export default function RoomPage({ params }: { params: Promise<{ slug: string }>
   const [onlineUsers, setOnlineUsers] = useState<ProfileSocketType[]>([])
   const { id: userId } = useProfileStore()
 
-  const router = useRouter()
-
   const { slug } = use(params)
 
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function RoomPage({ params }: { params: Promise<{ slug: string }>
           <ActiveUserCard currentUser={userId} activeUsers={onlineUsers} roomName={room.name} isConnected={isConnected} />
         </div>
         <div className="col-start-1 row-start-3 col-span-1 row-span-1">
-          <ChatSettings />
+          <ChatSettings slug={slug} room={room} />
         </div>
         <div className="col-start-2 row-start-1 col-span-2 row-span-1 ">
           <PomodoroTimer setIsBreak={setIsBreak} isBreak={isBreak} />

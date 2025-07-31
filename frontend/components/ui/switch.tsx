@@ -16,19 +16,19 @@ const Switch = React.forwardRef<
   const isChecked = Boolean(props.checked)
 
   const rootColorVariants = {
-    primary: "bg-primary-dark data-[state=checked]:bg-primary",
-    secondary: "bg-secondary-dark data-[state=checked]:bg-secondary",
-    success: "bg-success-dark data-[state=checked]:bg-success data-[state=unchecked]:bg-error ",
+    primary: "bg-input data-[state=checked]:bg-primary",
+    secondary: "bg-input data-[state=checked]:bg-secondary",
+    success: "bg-input data-[state=checked]:bg-success data-[state=unchecked]:bg-error ",
   }
 
   const thumbColorVariants = {
     primary: {
-      checked: "bg-primary-foreground text-primary",
-      unchecked: "bg-primary-dark-foreground text-primary-dark"
+      checked: "bg-accent text-primary",
+      unchecked: "bg-accent text-accent-foreground"
     },
     secondary: {
-      checked: "bg-secondary-foreground text-secondary",
-      unchecked: "bg-secondary-dark-foreground text-secondary-dark"
+      checked: "bg-accent text-secondary",
+      unchecked: "bg-accent text-accent-foreground"
     },
     success: {
       checked: "bg-success-foreground text-success",

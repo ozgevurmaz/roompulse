@@ -7,4 +7,4 @@ export const MessageSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 })
 
-export default mongoose.models.ChatMessage || mongoose.model("ChatMessage", MessageSchema)
+export default mongoose.models.Messages || mongoose.model("Messages", MessageSchema)

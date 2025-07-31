@@ -1,4 +1,4 @@
-import Message from "@/lib/models/message"
+import Messages from "@/lib/models/message"
 import { connectToDatabase } from "@/lib/mongoDB"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
         }
         await connectToDatabase()
 
-        const messages = await Message.find({ roomId: roomIncoming }).sort({ createdAt: "asc" })
+        const messages = await Messages.find({ roomId: roomIncoming }).sort({ createdAt: "asc" })
 
         return NextResponse.json(messages, { status: 200 })
     } catch (error) {
