@@ -47,21 +47,18 @@ export default function RoomPage({ params }: { params: Promise<{ slug: string }>
   return (
     <div className="relative flex flex-col h-full w-full overflow-hidden">
       <div className="p-3 h-[90vh] grid grid-cols-4 grid-rows-3 gap-3">
-        <div className="col-start-1 col-span-1 row-span-2">
+        <div className="col-start-1 col-span-1 row-span-3">
           <ActiveUserCard currentUser={userId} activeUsers={onlineUsers} roomName={room.name} isConnected={isConnected} />
-        </div>
-        <div className="col-start-1 row-start-3 col-span-1 row-span-1">
-          <ChatSettings slug={slug} room={room} />
         </div>
         <div className="col-start-2 row-start-1 col-span-2 row-span-1 ">
           <PomodoroTimer setIsBreak={setIsBreak} isBreak={isBreak} />
         </div>
-
         <div className="col-start-2 row-start-2 col-span-2 row-span-2 ">
           <ChatBox roomId={roomId} enable={enableChat} isConnected={isConnected} />
         </div>
-        <div className="col-span-1 row-span-3 ">
+        <div className="col-span-1 row-span-3 grid grid-rows-2 gap-3">
           <PersonalPreferences />
+          <ChatSettings slug={slug} room={room} />
         </div>
       </div>
     </div>

@@ -28,12 +28,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const baseStyle =
-      "w-full bg-input-bg rounded-md border text-foreground placeholder:text-input-placeholder focus:outline-none focus:ring-2 transition-all duration-200"
+      "w-full bg-input-bg rounded-md border border-input-border text-foreground placeholder:text-input-placeholder focus:outline-none focus:ring-2 transition-all duration-200"
 
 
     const colorVariants = {
-      primary: "border-input-border focus:ring-primary/70 focus:border-input-focus-border",
-      secondary: "border-secondary focus:ring-secondary/70 focus:border-secondary"
+      primary: "focus:ring-primary/70 focus:border-primary",
+      secondary: "focus:ring-secondary/70 focus:border-secondary"
     } as const
     const sizeVariants = {
       sm: "h-9 px-2 py-1 text-sm",

@@ -10,7 +10,10 @@ export async function logMessage({ roomId, user, text, createdAt = new Date(), s
         if (!mongoose.Types.ObjectId.isValid(roomId)) {
             throw new Error(`Invalid roomId: ${roomId}`)
         }
-
+console.log(roomId)
+console.log(user)
+console.log(text)
+console.log(system)
         const newMessage = await new Messages({
             roomId: new mongoose.Types.ObjectId(roomId),
             user: new mongoose.Types.ObjectId(user),
@@ -18,7 +21,7 @@ export async function logMessage({ roomId, user, text, createdAt = new Date(), s
             createdAt,
             system
         })
-
+console.log(newMessage)
         await newMessage.save()
     } catch (err) {
         console.error("Failed to log message:", err)

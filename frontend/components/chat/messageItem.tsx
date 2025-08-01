@@ -1,18 +1,18 @@
 import { formatTime } from '@/lib/utils';
 import { Users, Clock } from 'lucide-react';
-import React from 'react'
+import React, { useEffect } from 'react'
 import ProfilePhoto from '../ui/profilePhoto';
 
 type Props = {
     message: MessageType;
     index: number
-    user: string
+    userId: string
 }
 
 const MessageItem = (props: Props) => {
-
+    console.log(props.message)
     const isSystemMessage = props.message.system
-    const isOwnMessage = props.message.user.id === props.user
+    const isOwnMessage = props.message.user.id === props.userId
 
     if (isSystemMessage) {
         return (
@@ -27,10 +27,10 @@ const MessageItem = (props: Props) => {
 
     return (
         <div className={`flex mb-2 ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[75%] flex items-end gap-1 ${isOwnMessage ? 'order-2' : 'order-1'}`}>
+            <div className={`group max-w-[75%] flex items-end gap-1 ${isOwnMessage ? 'order-2' : 'order-1'}`}>
 
                 {/* Message bubble */}
-                <div className={`py-1 px-2 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md relative group border-border
+                <div className={`py-1 px-2 rounded-2xl shadow-sm hover:shadow-md relative group border-border group-hover:-translate-y-1 transition-all duration-300
             ${isOwnMessage
                         ? 'bg-chat-own text-foreground  rounded-br-none'
                         : 'bg-chat-bubble text-foreground rounded-bl-none border'
@@ -39,7 +39,7 @@ const MessageItem = (props: Props) => {
 
                     {/* User name (only for others' messages) */}
                     {!isOwnMessage && (
-                        <span className='text-xs flex gap-1 font-semibold items-start justify-center'>
+                        <span className='text-xs flex gap-1 font-semibold items-center'>
                             <ProfilePhoto imageUrl={props.message.user.avatar} size='sm' />
                             {props.message.user.username}
                         </span>

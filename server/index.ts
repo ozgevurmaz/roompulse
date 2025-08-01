@@ -5,6 +5,12 @@ import dotenv from "dotenv"
 import { logMessage } from "./lib/logMessages"
 dotenv.config()
 
+const system: ProfileType = {
+  username: "System",
+  id: "688c91e9f80d9d333ea3f07d",
+  avatar: "system",
+}
+
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
@@ -20,88 +26,91 @@ io.on("connection", (socket) => {
     const previousRoomId = socket.data.roomId
 
     if (previousRoomId && previousRoomId !== roomId) {
+      const leftAt = new Date()
       socket.leave(previousRoomId)
-      if (onlineUsersPerRoom[previousRoomId].has(user.username)) {
+      if (previousRoomId && onlineUsersPerRoom[previousRoomId]?.has(user.username)) {
+
         onlineUsersPerRoom[previousRoomId].delete(user.username)
+
+        io.to(previousRoomId).emit("chat-message", {
+          roomId,
+          user: { username: "system" },
+          text: `${user.username} joined the room`,
+          leftAt,
+          system: true
+        })
+
+        await logMessage({
+          roomId,
+          user: system.id,
+          text: `${user.username} left the room`,
+          createdAt: leftAt,
+          system: true
+        })
+
       }
       io.to(previousRoomId).emit("user-left", user)
       io.to(previousRoomId).emit("online-users", Array.from(onlineUsersPerRoom[previousRoomId]))
-
-      const leftAt = new Date()
-      io.to(previousRoomId).emit("chat-message", {
-        roomId,
-        user: { username: "system" },
-        text: `${user.username} joined the room`,
-        leftAt,
-        system: true
-      })
-      await logMessage({
-        roomId,
-        user: "system",
-        text: `${user.username} left the room`,
-        createdAt: leftAt,
-        system: true
-      })
     }
 
     socket.data.user = user
     socket.data.roomId = roomId
 
     socket.join(roomId)
-
+    const joinedAt = new Date()
     if (!onlineUsersPerRoom[roomId]) {
       onlineUsersPerRoom[roomId] = new Map()
     }
-    onlineUsersPerRoom[roomId].set(user.username, user)
-    io.to(roomId).emit("online-users", Array.from(onlineUsersPerRoom[roomId].values()))
+    if (roomId && !onlineUsersPerRoom[roomId]?.has(user.username)) {
+      onlineUsersPerRoom[roomId].set(user.username, user)
 
-    const joinedAt = new Date()
-    io.to(roomId).emit("chat-message", {
-      roomId,
-      user: "system",
-      text: `${user.username} joined the room`,
-      joinedAt,
-      system: true
-    })
-    await logMessage({
-      roomId,
-      user: "system",
-      text: `${user.username} joined the room`,
-      createdAt: joinedAt,
-      system: true
-    })
+      io.to(roomId).emit("chat-message", {
+        roomId,
+        user: "system",
+        text: `${user.username} joined the room`,
+        joinedAt,
+        system: true
+      })
+      await logMessage({
+        roomId,
+        user: system.id,
+        text: `${user.username} joined the room`,
+        createdAt: joinedAt,
+        system: true
+      })
+    }
+
+    io.to(roomId).emit("online-users", Array.from(onlineUsersPerRoom[roomId].values()))
   })
 
   socket.on("user-left", async ({ user, roomId }: { user: ProfileType; roomId: string }) => {
     socket.leave(roomId)
-    console.log("1")
-    if (onlineUsersPerRoom[roomId].has(user.username)) {
-      onlineUsersPerRoom[roomId].delete(user.username)
-      console.log(onlineUsersPerRoom)
+    const leftAt = new Date()
+    if (roomId && onlineUsersPerRoom[roomId]?.has(user.username)) {
+      onlineUsersPerRoom[roomId]!.delete(user.username)
+
+      io.to(roomId).emit("chat-message", {
+        roomId,
+        user: "system",
+        text: `${user.username} left the room`,
+        leftAt,
+        system: true
+      })
+
+      await logMessage({
+        roomId,
+        user: system.id,
+        text: `${user.username} left the room`,
+        createdAt: leftAt,
+        system: true
+      })
     }
     io.to(roomId).emit("online-users", Array.from(onlineUsersPerRoom[roomId].values()))
-    console.log("Online map entries", onlineUsersPerRoom[roomId].values())
-    console.log("2")
-    const leftAt = new Date()
-    io.to(roomId).emit("chat-message", {
-      roomId,
-      user: "system",
-      text: `${user.username} left the room`,
-      leftAt,
-      system: true
-    })
-    await logMessage({
-      roomId,
-      user: "system",
-      text: `${user.username} left the room`,
-      createdAt: leftAt,
-      system: true
-    })
   })
 
   socket.on("chat-message", async ({ roomId, user, text }: { user: ProfileType; roomId: string; text: string }) => {
     const createdAt = new Date()
-    io.to(roomId).emit("chat-message", { roomId, user:user.id, text, createdAt })
+    io.to(roomId).emit("chat-message", { roomId, user: user, text, createdAt })
 
     await logMessage({ roomId, user: user.id, text, createdAt })
   })
@@ -123,7 +132,7 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("user-left", user)
       io.to(roomId).emit("stop-typing", { roomId, user })
       io.to(roomId).emit("online-users", Array.from(onlineUsersPerRoom[roomId].values()))
-      logMessage({ roomId, user: "system", text: `${user.username} left the room`, system: true })
+      logMessage({ roomId, user: system.id, text: `${user.username} left the room`, system: true })
     }
   })
 })

@@ -140,7 +140,7 @@ const ChatBox = (
                     </div>
                 ) : (
                     chat.map((m, i) => (
-                        <MessageItem key={i} message={m} index={i} user={user.id} />
+                        <MessageItem key={i} message={m} index={i} userId={user.id} />
                     ))
                 )}
                 <div ref={chatEndRef} />

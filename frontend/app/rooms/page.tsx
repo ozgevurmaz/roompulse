@@ -12,7 +12,6 @@ import { useRooms } from "@/hooks/get/useRooms"
 import { useSocketStore } from "@/lib/zustand/socketStore"
 import { useEffect, useState } from "react"
 import { Dialog, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogOverlay, DialogTitle } from "@/components/ui/dialog"
-import room from "@/lib/models/room"
 
 export default function RoomsPage() {
   const router = useRouter()

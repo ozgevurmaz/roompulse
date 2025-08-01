@@ -38,29 +38,35 @@ const ChatSettings = ({ slug, room }: Props) => {
     }
 
     return (
-        <Card className='h-full hover:translate-y-0 hover:border-border hover:shadow-sm'>
-            <CardHeader className='flex justify-between'>
-                <CardTitle>Card Settings</CardTitle>
-                <Button onClick={handleSave}> <Save className="w-4 h-4 mr-1" />Save</Button>
+        <Card className='h-full hover:translate-y-0 hover:border-border hover:shadow-sm gap-3'>
+            <CardHeader className='flex justify-between pb-0'>
+                <CardTitle>Chat Settings</CardTitle>
+                <Button
+                    onClick={handleSave}
+                    color='secondary'
+                >
+                    <Save className="w-4 h-4 mr-1" />
+                    Save
+                </Button>
             </CardHeader>
-            <CardContent className='flex items-start gap-1 text-sm w-full'>
+            <CardContent className='flex flex-col gap-3 w-full items-start'>
+                <Input
+                    label="Pomodoro Target"
+                    type="number"
+                    min={1}
+                    max={10}
+                    value={targetCount}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTargetCount(Number(e.target.value))}
+                    inputSize="sm"
+                    color='secondary'
+                />
 
-                <div className='w-full flex items-center justify-between gap-2'>
-                    <Input
-                        label="Pomodoro Target"
-                        type="number"
-                        min={1}
-                        max={10}
-                        value={targetCount}
-                        onChange={(e:React.ChangeEvent<HTMLInputElement>) => setTargetCount(Number(e.target.value))}
-                        className='w-16'
-                        inputSize="sm"
-                    />
-                </div>
-                
-                <div className='w-full flex items-center justify-between gap-2'>
-                    Show Chat:
+                <div className='flex w-full items-center justify-between gap-2'>
+                    <span className='text-sm font-medium'>
+                        Show Chat During Focus:
+                    </span>
                     <Switch
+                        color='secondary'
                         checked={chatVisible}
                         onCheckedChange={setChatVisible}
                         CheckIcon={MessageCircleMore}
@@ -68,10 +74,12 @@ const ChatSettings = ({ slug, room }: Props) => {
                     />
                 </div>
 
-                <div className='w-full flex items-center justify-between gap-2'>
-                    Break Duration:
-                    <Select value={breakLength} onValueChange={setBreakLength}>
-                        <SelectTrigger className='max-w-fit'>
+                <div className='flex flex-col gap-1 w-full'>
+                    <span className='text-sm font-medium'>
+                        Break Duration:
+                    </span>
+                    <Select value={breakLength} onValueChange={setBreakLength} >
+                        <SelectTrigger color='secondary'>
                             <SelectValue placeholder="Pick one" />
                         </SelectTrigger>
                         <SelectContent>
@@ -81,6 +89,8 @@ const ChatSettings = ({ slug, room }: Props) => {
                         </SelectContent>
                     </Select>
                 </div>
+
+
             </CardContent>
         </Card>
     )

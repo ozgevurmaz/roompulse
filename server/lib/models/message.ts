@@ -5,6 +5,7 @@ export const MessageSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "UserProfile", required: true },
   text: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+  system: { type: Boolean, default: false }
 })
 
 export default mongoose.models.Messages || mongoose.model("Messages", MessageSchema)

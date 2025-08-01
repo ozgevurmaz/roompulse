@@ -20,16 +20,13 @@ export async function POST(req: NextRequest) {
   try {
 
     await connectToDatabase();
-    console.log("db connected")
 
     const body = await req.json();
-    console.log("[rooms_post body]", body)
     const { name, creator, target, breakDuration, showChat } = body;
 
     const slug = `${name.toLowerCase().replace(/\s+/g, "-")}-${nanoid(5)}`
 
     if (!name) {
-      console.log("No name provided")
       return new NextResponse("Name is required", { status: 400 })
     }
 
@@ -44,7 +41,6 @@ export async function POST(req: NextRequest) {
     })
 
     await newRoom.save()
-    console.log("Room created:", newRoom)
 
     return NextResponse.json(newRoom, { status: 200 })
   } catch (error) {

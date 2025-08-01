@@ -4,19 +4,27 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
     try {
-        const { searchParams } = new URL(req.url)
-        const roomIncoming = searchParams.get("roomId")
-
-        if (!roomIncoming) {
-            return NextResponse.json({ error: "Missing roomId" }, { status: 400 })
-        }
         await connectToDatabase()
 
-        const messages = await Messages.find({ roomId: roomIncoming }).sort({ createdAt: "asc" })
+        const roomId = req.nextUrl.searchParams.get("roomId")
+        if (!roomId) return new NextResponse("Room ID required", { status: 400 })
 
-        return NextResponse.json(messages, { status: 200 })
+        const messages = await Messages.find({ roomId })
+            .sort({ createdAt: 1 })
+            .populate("user", "_id username avatar title company system")
+            .lean()
+
+        const normalizedMessages = messages.map((msg) => ({
+            ...msg,
+            user: {
+                ...msg.user,
+                id: msg.user._id.toString(),
+            },
+        }))
+
+        return NextResponse.json(normalizedMessages)
     } catch (error) {
-        console.log("[messages_get]", error)
-        return new NextResponse("internal server error", { status: 500 });
+        console.error("[messages_get]", error)
+        return new NextResponse("Internal Server Error", { status: 500 })
     }
 }

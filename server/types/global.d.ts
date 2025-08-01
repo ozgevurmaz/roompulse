@@ -16,9 +16,9 @@ declare global {
   type ProfileType = {
     id: string,
     username: string,
-    avatar: string,
+    avatar?: string,
     title?: string,
-    company: string
+    company?: string
   }
 }
 

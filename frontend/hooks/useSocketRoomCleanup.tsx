@@ -22,15 +22,12 @@ export function useSocketRoomCleanup() {
     if (!username || !id) return
     if (prevRoomRef.current === joinedRoomId) return
 
-    console.log("prev", prevRoomRef.current)
-    console.log("new", joinedRoomId)
-
     if (shouldLeaveRoom) {
       socket.emit("user-left", {
         roomId: prevRoomRef.current,
         user,
       })
-      console.log("leaving user", user)
+
       prevRoomRef.current = null
       setIsConnected(false)
       setJoinedRoomId("")
@@ -40,7 +37,6 @@ export function useSocketRoomCleanup() {
       socket.emit("join-room", { roomId: joinedRoomId, user })
       prevRoomRef.current = joinedRoomId
       setIsConnected(true)
-      console.log("joining user", user)
     }
     return
 
