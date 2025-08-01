@@ -4,7 +4,7 @@
 
 ---
 
-![Screenshot](.frontend/public/room.png) 
+![Screenshot](./frontend/public/room.png) 
 
 ## 🚀 Purpose
 
@@ -47,7 +47,7 @@ npm dev
 # Run backend server (WebSocket + Express)
 cd backend
 npm run server
-
+```
 ## 🔮 Upcoming Features
 
 🧠 Core Functionality
