@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronLeft } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { usePathname, useRouter } from "next/navigation"
 import ProfilePhoto from '../ui/profilePhoto'
@@ -10,6 +10,7 @@ import { NavLinkWithDropdown } from './navLinkDropDown'
 import { useProfileStore } from '@/lib/zustand/useProfileStore'
 
 const Navbar = () => {
+
     const {
         avatar, username
     } = useProfileStore()

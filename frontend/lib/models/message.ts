@@ -8,4 +8,5 @@ export const MessageSchema = new mongoose.Schema({
   system: { type: Boolean }
 })
 
+MessageSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 })
 export default mongoose.models.Messages || mongoose.model("Messages", MessageSchema)

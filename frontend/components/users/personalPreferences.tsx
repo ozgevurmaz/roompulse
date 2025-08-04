@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select'
 import { SelectValue } from '@radix-ui/react-select'
 import { Switch } from '../ui/switch'
-import { Bell, BellOff, MessageCircleMore, MessageCircleOff, Save } from 'lucide-react'
+import { Bell, BellOff, Save } from 'lucide-react'
 import { Button } from '../ui/button'
 
 type Props = {}

@@ -54,8 +54,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 await connectToDatabase()
 
                 const existing = await UserProfile.findOne({ username: user.username })
-                console.log("profile", profile)
-                console.log("user", user)
 
                 if (!existing) {
                     // Create new user profile
@@ -102,7 +100,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     pages: {
         signIn: '/auth/signin',
-        signOut: ''
+        signOut: '/'
     },
     events: {
         async signIn({ user, isNewUser }) {

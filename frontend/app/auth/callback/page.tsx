@@ -60,7 +60,7 @@ export default function AuthCallback() {
     }, [checkCompleted, loading, error])
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen w-full">
             <div className="text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border-focus mx-auto"></div>
                 <p className="mt-4 text-foreground">Setting up your account...</p>
