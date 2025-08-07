@@ -3,15 +3,16 @@ import { create } from 'zustand'
 interface RoomsStore {
   rooms: RoomType[]
   setRooms: (rooms: RoomType[]) => void
-  fetchRooms: () => Promise<void>
+  updateRoom: (id: string, update: Partial<RoomType>) => void
 }
 
 export const useRoomsStore = create<RoomsStore>((set) => ({
   rooms: [],
   setRooms: (rooms) => set({ rooms }),
-  fetchRooms: async () => {
-    const res = await fetch('/api/rooms')
-    const data = await res.json()
-    set({ rooms: data })
-  }
+  updateRoom: (slug, update) =>
+    set((state) => ({
+      rooms: state.rooms.map((room) =>
+        room.slug === slug ? { ...room, ...update } : room
+      )
+    })),
 }))

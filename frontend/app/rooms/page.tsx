@@ -8,20 +8,25 @@ import Loading from "@/components/screens/Loading"
 import { useRoomsStore } from "@/lib/zustand/useRooms"
 import { CreateRoomModal } from "@/components/room/createRoomModal"
 import { useProfileStore } from "@/lib/zustand/useProfileStore"
-import { useRooms } from "@/hooks/get/useRooms"
 import { useSocketStore } from "@/lib/zustand/socketStore"
 import { useEffect, useState } from "react"
 import { Dialog, DialogDescription, DialogFooter, DialogHeader, DialogContent, DialogOverlay, DialogTitle } from "@/components/ui/dialog"
+import { useRooms } from "@/hooks/get/useRooms"
+import { connectSocket } from "@/lib/socket"
+
+const socket = connectSocket()
 
 export default function RoomsPage() {
   const router = useRouter()
 
   const { id } = useProfileStore()
-  const { rooms, setRooms } = useRoomsStore()
-  const { loading } = useRooms()
+  const { rooms } = useRoomsStore()
+
+  const { loading, error } = useRooms()
 
   const [warningModal, setWarningModal] = useState<boolean>(false)
   const [currentSlug, setCurrentRoomSlug] = useState<string>("")
+
   useEffect(() => useSocketStore.getState().setJoinedRoomId(""), [])
 
   const handleRoomCardClick = (room: RoomType) => {
@@ -46,6 +51,14 @@ export default function RoomsPage() {
     if (!room.active) return <Clock className="w-4 h-4" />
     return room.onFocus ? <Zap className="w-4 h-4" /> : <TimerOff className="w-4 h-4" />
   }
+
+  useEffect(() => {
+
+    socket.on("room-updated", (room) => {
+      useRoomsStore.getState().updateRoom(room.slug, room)
+    })
+
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-white dark:to-zinc-900">
@@ -125,7 +138,7 @@ export default function RoomsPage() {
                       <div className="grid grid-cols-3 gap-3 text-sm">
                         <div className="flex items-center gap-2 text-foreground/80 ">
                           <Users className="w-4 h-4 text-blue-500" />
-                          <span className="font-medium">0</span>
+                          <span className="font-medium">{room.activeUsers}</span>
                         </div>
                         <div className="flex items-center gap-2 text-foreground/80">
                           <TimerReset className="w-4 h-4 text-purple-500" />

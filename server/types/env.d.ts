@@ -4,5 +4,6 @@ declare namespace NodeJS {
     DB_NAME: string
     NEXT_PUBLIC_SOCKET_URL: string
     NEXT_PUBLIC_SITE_URL: string
+    SYSTEM_USER_ID: string
   }
 }

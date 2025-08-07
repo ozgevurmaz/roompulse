@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/Card'
-import { MessageCircle, User, User2 } from 'lucide-react'
+import { Crown, MessageCircle, User, User2 } from 'lucide-react'
 import ProfilePhoto from '../ui/profilePhoto'
 
 type Props = {
@@ -9,9 +9,11 @@ type Props = {
     roomId?: string
     isConnected: boolean
     currentUser: string
+    captain: string | null
 }
 
 const ActiveUserCard = (props: Props) => {
+
     return (
         <Card className='h-full hover:translate-y-0 hover:border-border hover:shadow-sm gap-1'>
             <CardHeader className='border-b border-primart-dark'>
@@ -36,6 +38,7 @@ const ActiveUserCard = (props: Props) => {
                                     key={index}
                                     className={`flex px-2 py-1 w-full gap-2 items-center ${index / 2 === 0 ? "bg-primary/10 text-primary-dark" : "bg-secondary/10 text-secondary-dark"}`}
                                 >
+                                    {u.id === props.captain && <Crown className='text-secondary w-4 h-4' />}
                                     {/* Profile Photo */}
                                     <ProfilePhoto imageUrl={u.avatar} size="md" />
 

@@ -13,15 +13,15 @@ export async function GET(req: NextRequest) {
             .sort({ createdAt: 1 })
             .populate("user", "_id username avatar title company system")
             .lean()
-
-        const normalizedMessages = messages.map((msg) => ({
-            ...msg,
-            user: {
-                ...msg.user,
-                id: msg.user._id.toString(),
-            },
-        }))
-
+        console.log("Fetched messages:", messages)
+        const normalizedMessages = messages
+            .map((msg) => ({
+                ...msg,
+                user: {
+                    ...msg.user,
+                    id: msg.user._id.toString(),
+                },
+            }))
         return NextResponse.json(normalizedMessages)
     } catch (error) {
         console.error("[messages_get]", error)

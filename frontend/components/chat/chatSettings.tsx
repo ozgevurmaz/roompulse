@@ -23,7 +23,7 @@ const ChatSettings = ({ slug, room }: Props) => {
 
     useEffect(() => {
         setTargetCount(room.target || 3)
-        setChatVisible(room.showChat || false)
+        setChatVisible(room.enableChat || false)
         setBreakLength(room.breakDuration?.toString() || "5")
     }, [])
 

@@ -17,20 +17,19 @@ const ChatBox = (
         roomId,
         enable,
         isConnected
-    }
-        :
-        {
-            roomId: string,
-            enable: boolean,
-            isConnected: boolean
-        }) => {
+    }: {
+        roomId: string,
+        enable: boolean,
+        isConnected: boolean
+    }) => {
     const { id, username, title, company, avatar } = useProfileStore()
+
+
 
     const user: ProfileSocketType = { id, username, title, company, avatar }
     const [message, setMessage] = useState<string>("")
     const [chat, setChat] = useState<MessageType[]>([])
     const [typingUsers, setTypingUsers] = useState<Map<string, ProfileSocketType>>(new Map())
-
 
     const chatEndRef = useRef<HTMLDivElement>(null)
     const typingTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -42,6 +41,7 @@ const ChatBox = (
     }, [chat])
 
     useEffect(() => {
+        if (!roomId) return
         const getHistory = async () => {
             const res = await fetch(`/api/messages?roomId=${roomId}`)
             const data: MessageType[] = await res.json()

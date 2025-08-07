@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, use } from 'react';
 import { Play, Pause, RotateCcw, Coffee, Brain } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
@@ -10,16 +10,19 @@ import { formatSeconds } from '@/lib/utils';
 const PomodoroTimer = (
   {
     setIsBreak,
-    isBreak
+    isBreak,
+    isRoomCaptain
   }
     : {
       setIsBreak: (val: boolean) => void,
-      isBreak: boolean
+      isBreak: boolean,
+      isRoomCaptain: boolean
     }
 ) => {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
 
   useEffect(() => {
     if (isActive && timeLeft > 0) {
@@ -84,11 +87,12 @@ const PomodoroTimer = (
           {formatSeconds(timeLeft)}
         </div>
 
-        <div className="flex gap-4 justify-center">
+        <div className="relative flex gap-4 min-w-full">
           <Button
             onClick={toggleTimer}
             color={`${isBreak ? "secondary" : "primary"}`}
             className='py-2 px-4'
+            disabled={!isRoomCaptain}
           >
             {
               isActive
@@ -102,8 +106,9 @@ const PomodoroTimer = (
 
           <Button
             onClick={resetTimer}
-            color={`${isBreak ? "secondarydark" : "primarydark"}`}
+            color='none'
             className='py-2 px-4'
+            disabled={!isRoomCaptain}
           >
             <RotateCcw size={20} className='mr-2' />
             Reset

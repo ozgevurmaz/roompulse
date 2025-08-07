@@ -1,0 +1,1 @@
+export const onlineUsersPerRoom: Record<string, Map<string, ProfileType>> = {}

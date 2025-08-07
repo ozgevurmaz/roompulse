@@ -8,11 +8,16 @@ export async function GET(
 ) {
   await connectToDatabase()
   const { slug } = await params
+
+  if (!slug) {
+    return new NextResponse("Slug is required", { status: 400 })
+  }
   const room = await Room.findOne({ slug: slug }).lean()
 
   if (!room) {
     return new NextResponse("Room not found", { status: 404 })
   }
+
   return NextResponse.json(room)
 }
 
@@ -25,10 +30,10 @@ export async function POST(
 
   try {
     await connectToDatabase()
-    
+
     const updatedRoomData = await req.json()
     const updatedRoom = await Room.findOneAndUpdate({ slug: slug }, updatedRoomData)
-    
+
     if (!updatedRoom) {
       return NextResponse.json({ error: 'Room not found' }, { status: 404 })
     }

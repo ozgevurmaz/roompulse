@@ -10,10 +10,9 @@ type Props = {
 }
 
 const MessageItem = (props: Props) => {
-    console.log(props.message)
     const isSystemMessage = props.message.system
     const isOwnMessage = props.message.user.id === props.userId
-
+    
     if (isSystemMessage) {
         return (
             <div className="flex justify-center my-2">

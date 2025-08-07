@@ -1,4 +1,3 @@
-// components/CreateRoomModal.tsx
 "use client"
 
 import { useState } from "react"
@@ -6,7 +5,6 @@ import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import { useRoomsStore } from "@/lib/zustand/useRooms"
 import { toast } from "react-toastify"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Switch } from "../ui/switch"
@@ -25,7 +23,6 @@ export function CreateRoomModal({ userId }: Props) {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
-    const { fetchRooms } = useRoomsStore()
 
     const handleSubmit = async () => {
         if (!roomName.trim()) return
@@ -54,7 +51,6 @@ export function CreateRoomModal({ userId }: Props) {
         } finally {
             setLoading(false)
             setOpen(false)
-            fetchRooms();
         }
     }
 

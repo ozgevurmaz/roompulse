@@ -1,4 +1,6 @@
-type RoomDBType = {
+import { ObjectId } from "mongoose"
+
+export type RoomDBType = {
   _id: ObjectId
   name: string
   slug: string
@@ -16,4 +18,4 @@ type RoomDBType = {
   createdAt: Date
 }
 
-type RoomType = Omit<RoomDBType, "_id">
+export type RoomType = Omit<RoomDBType, "_id">

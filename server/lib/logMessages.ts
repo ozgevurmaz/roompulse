@@ -1,11 +1,9 @@
 import Messages from "./models/message"
-import { connectToDatabase } from "./mongoDB"
 import type { MessageSocketType } from "../types/global"
 import mongoose from "mongoose"
 
 export async function logMessage({ roomId, user, text, createdAt = new Date(), system = false }: MessageSocketType) {
     try {
-        await connectToDatabase()
         if (!roomId) return
         if (!mongoose.Types.ObjectId.isValid(roomId)) {
             throw new Error(`Invalid roomId: ${roomId}`)
